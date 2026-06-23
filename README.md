@@ -29,7 +29,6 @@ This repository contains code, configuration, and documentation used for a Bache
 - Visualization scripts for results plots and summary tables
 
 ## Results (high level)
-- Example: reduced end-to-end latency by X% using adaptive buffering (replace X with final number)
 - Example: increased stable frame throughput from A fps to B fps under constrained network conditions (replace A/B)
 Full experimental results and plots are in `docs/results/` (or `results/`) — see the Experiments section for reproducing these.
 
@@ -139,7 +138,7 @@ Specify a license. (If you want MIT, Apache-2.0, or CC-BY for thesis material, s
 Example: MIT License — see LICENSE file.
 
 ## Contact
-Author: <Your Name> (<your.email@example.com>)  
+Author: <Lihini Hewage> (<lihinih@gmail.com>)  
 GitHub: https://github.com/lihinih
 
 ## Citation
