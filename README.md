@@ -1,1 +1,150 @@
-# Bachelore-Thesis-RTSP-streaming-pipeline-optimization-
+# RTSP Streaming Pipeline Optimization — Bachelor's Thesis
+
+Short, well-documented repository for the Bachelor’s thesis: optimization of RTSP streaming pipelines. This project implements, benchmarks, and evaluates techniques to improve throughput, latency, and reliability of RTSP video ingestion and processing pipelines.
+
+## Table of contents
+- [Abstract](#abstract)
+- [Features](#features)
+- [Results (high level)](#results-high-level)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Experiments & Reproducibility](#experiments--reproducibility)
+- [Repository structure](#repository-structure)
+- [Datasets](#datasets)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Citation](#citation)
+
+## Abstract
+This repository contains code, configuration, and documentation used for a Bachelor’s thesis on optimizing RTSP streaming pipelines. The work investigates buffering policies, parallel decoding, frame dropping strategies, and network parameter tuning to improve end-to-end performance for real-time video analytics.
+
+## Features
+- RTSP ingest module supporting live streams and recorded test inputs
+- Pluggable processing pipeline: decoding, frame sampling, lightweight analytics (example modules)
+- Experiment harness for reproducible benchmarks (latency, throughput, frame loss)
+- Scripts to run parameter sweeps and collect metrics
+- Visualization scripts for results plots and summary tables
+
+## Results (high level)
+- Example: reduced end-to-end latency by X% using adaptive buffering (replace X with final number)
+- Example: increased stable frame throughput from A fps to B fps under constrained network conditions (replace A/B)
+Full experimental results and plots are in `docs/results/` (or `results/`) — see the Experiments section for reproducing these.
+
+## Requirements
+- Python 3.8+ (tested with 3.8 — 3.11)
+- pip
+- ffmpeg (for local testing; required by some scripts for re-streaming/recording)
+- (Optional) GPU drivers if GPU-accelerated decoding/processing used
+
+Install system-level dependencies:
+- Debian/Ubuntu example:
+  sudo apt update && sudo apt install -y ffmpeg
+
+## Installation
+1. Clone the repo:
+   git clone https://github.com/<your-username>/Bachelore-Thesis-RTSP-streaming-pipeline-optimization.git
+   cd Bachelore-Thesis-RTSP-streaming-pipeline-optimization
+
+2. Create virtual environment and install Python dependencies:
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+
+3. (Optional) Install extra packages for plotting/analysis:
+   pip install -r requirements-dev.txt
+
+## Usage
+
+Basic pipeline run (example):
+python -m src.run_pipeline --config config/default.yaml --rtsp-url "rtsp://<camera-or-server>/stream" --output results/output.mp4
+
+Common options:
+- --config PATH         Path to a YAML/JSON configuration file (see config/ for examples)
+- --rtsp-url URL        RTSP URL to ingest (or path to local video file for offline testing)
+- --workers N           Number of worker processes/threads for decoding and processing
+- --buffer-size N       Buffer size in frames for the ingest queue
+- --log-level LEVEL     Logging verbosity (INFO/DEBUG)
+
+Run experiments (example):
+python -m experiments/run_experiments.py --config experiments/experiment_set_1.yaml --out results/exp1/
+
+Generate plots:
+python -m scripts/plot_results --input results/exp1/metrics.json --out docs/plots/exp1.png
+
+## Configuration
+Configurations are YAML files under `config/`. Key tunables include:
+- ingest:
+  - buffer_size: number of frames to buffer
+  - read_timeout_ms: timeout for RTSP reads
+  - reconnect_policy: backoff strategy
+- decoding:
+  - use_hardware: true/false
+  - decoder_threads: number of decode threads
+- sampling:
+  - frame_rate: target output fps
+  - drop_policy: earliest/latest/priority-based
+- evaluation:
+  - metrics: list of metrics to collect (latency, throughput, frame_loss)
+
+See `config/default.yaml` for a complete example.
+
+## Experiments & Reproducibility
+- Experiments are defined under `experiments/` as YAML experiment sets.
+- Each run records:
+  - system metadata (CPU, memory, network)
+  - configuration used
+  - raw logs and processed metrics (latency distributions, throughput, frame loss)
+- To reproduce an experiment:
+  1. Ensure same Python environment and system-level dependencies.
+  2. Use the provided config and run the same command in `experiments/run_experiments.py`.
+  3. Use the `scripts/collect_system_info.sh` to capture machine state.
+
+Include random-seed settings and timestamps in results to help with reproducibility.
+
+## Repository structure
+- src/                — main source code (ingest, decode, pipeline modules)
+- config/             — example configuration files
+- experiments/        — experiment definitions and orchestration scripts
+- results/            — results generated by experiment runs (not committed)
+- docs/               — thesis writeup excerpts, plots, and static documentation
+- requirements.txt    — Python dependencies
+- requirements-dev.txt — additional tools for plotting and analysis
+- scripts/            — helper scripts (plotting, data collection)
+- README.md           — this file
+
+## Datasets
+- This repo does not include large video datasets. Use local camera streams, simulated RTSP servers, or public datasets (e.g., PETS, MOT, or custom recorded test streams).
+- If you used a specific dataset for the thesis, add the dataset name and download link here, plus any usage/licensing notes.
+
+## Notes on evaluation metrics
+- Latency: measured as timestamp when frame ingested to timestamp when frame processed / output produced (ms)
+- Throughput: frames per second successfully processed end-to-end
+- Frame loss: fraction of input frames not processed due to buffer overflow or drop policies
+- CPU/GPU utilization and memory footprint are collected for resource-efficiency analysis
+
+## Contributing
+Contributions welcome. Suggested workflow:
+1. Fork the repo
+2. Create a feature branch: git checkout -b feature/my-change
+3. Add tests and update docs
+4. Open a pull request with a clear description and mention the experiment config if applicable
+
+Please include the system configuration and the config file used for any experimental results you add.
+
+## License
+Specify a license. (If you want MIT, Apache-2.0, or CC-BY for thesis material, state here.)
+Example: MIT License — see LICENSE file.
+
+## Contact
+Author: <Your Name> (<your.email@example.com>)  
+GitHub: https://github.com/lihinih
+
+## Citation
+If you use this repository in academic work, please cite:
+- [Your Name], "RTSP streaming pipeline optimization," Bachelor’s thesis, <University>, 20XX. DOI or link (if available).
+
+## Acknowledgements
+Acknowledgements, supervisor, funding, or lab details go here.
